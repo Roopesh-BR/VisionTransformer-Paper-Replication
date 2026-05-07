@@ -4,7 +4,7 @@ from pathlib import Path
 import torch
 from torch import nn
 from torchvision import transforms
-from torchvision.models import vit_b_16
+from torchvision.models import vit_b_16, ViT_B_16_Weights
 from PIL import Image
 
 from vit.model import ViT
@@ -33,12 +33,17 @@ def get_model(model_type: str, model_path: str, device: torch.device) -> torch.n
     return model.to(device)
 
 
-def predict(image_path: str, model: torch.nn.Module, device: torch.device) -> tuple:
-    transform = transforms.Compose([
+def get_transform(model_type: str) -> transforms.Compose:
+    if model_type == "pretrained":
+        return ViT_B_16_Weights.DEFAULT.transforms()
+    return transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
+
+
+def predict(image_path: str, model: torch.nn.Module, transform, device: torch.device) -> tuple:
     img = Image.open(image_path).convert("RGB")
     img_tensor = transform(img).unsqueeze(0).to(device)
     model.eval()
@@ -54,7 +59,8 @@ def main():
     args = parse_args()
     device = torch.device(args.device)
     model = get_model(args.model, args.model_path, device)
-    class_name, confidence = predict(args.image, model, device)
+    transform = get_transform(args.model)
+    class_name, confidence = predict(args.image, model, transform, device)
     print(f"Predicted class: {class_name} | Confidence: {confidence:.3f}")
     if args.plot:
         pred_and_plot_image(
@@ -62,6 +68,7 @@ def main():
             image_path=args.image,
             class_names=CLASS_NAMES,
             device=device,
+            transform=transform,
         )
 
 

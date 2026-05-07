@@ -22,7 +22,7 @@ def load_model(
     checkpoint_path: str,
     device: torch.device,
 ) -> torch.nn.Module:
-    model.load_state_dict(torch.load(checkpoint_path, map_location=device))
+    model.load_state_dict(torch.load(checkpoint_path, map_location=device, weights_only=True))
     return model
 
 
