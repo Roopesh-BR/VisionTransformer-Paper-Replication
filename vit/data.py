@@ -2,6 +2,7 @@ import os
 import zipfile
 import requests
 from pathlib import Path
+from typing import Tuple, List
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
@@ -19,7 +20,9 @@ def download_data(source: str, destination: str, remove_source: bool = True) -> 
         target_file = Path(source).name
         with open(data_path / target_file, "wb") as f:
             print(f"[INFO] Downloading {target_file}...")
-            f.write(requests.get(source).content)
+            response = requests.get(source)
+            response.raise_for_status()
+            f.write(response.content)
         with zipfile.ZipFile(data_path / target_file, "r") as zip_ref:
             print(f"[INFO] Unzipping {target_file}...")
             zip_ref.extractall(image_path)
@@ -34,7 +37,7 @@ def create_dataloaders(
     transform: transforms.Compose,
     batch_size: int,
     num_workers: int = NUM_WORKERS,
-):
+) -> Tuple[DataLoader, DataLoader, List[str]]:
     train_data = datasets.ImageFolder(train_dir, transform=transform)
     test_data = datasets.ImageFolder(test_dir, transform=transform)
     class_names = train_data.classes
