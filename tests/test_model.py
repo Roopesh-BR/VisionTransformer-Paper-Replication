@@ -25,7 +25,7 @@ def test_patch_embedding_rejects_non_divisible_image():
         model(torch.randn(1, 3, 225, 225))
 
 
-from vit.model import MultiHeadSelfAttentionBlock, MLPBlock, TransformerEncoderBlock
+from vit.model import MultiHeadSelfAttentionBlock, MLPBlock, TransformerEncoderBlock, ViT
 
 
 def test_msa_block_output_shape():
@@ -73,3 +73,41 @@ def test_transformer_encoder_block_output_shape():
     x = torch.randn(BATCH, SEQ_LEN, EMBED_DIM)
     out = model(x)
     assert out.shape == x.shape
+
+
+def test_vit_output_shape():
+    model = ViT(
+        image_size=224,
+        in_channels=3,
+        patch_size=16,
+        num_transformer_layers=12,
+        embedding_dim=768,
+        mlp_size=3072,
+        num_heads=12,
+        attn_dropout=0.0,
+        mlp_dropout=0.1,
+        embedding_dropout=0.1,
+        num_classes=3,
+    )
+    x = torch.randn(BATCH, 3, 224, 224)
+    out = model(x)
+    assert out.shape == (BATCH, 3)
+
+
+def test_vit_output_shape_small():
+    model = ViT(
+        image_size=64,
+        in_channels=3,
+        patch_size=16,
+        num_transformer_layers=2,
+        embedding_dim=64,
+        mlp_size=256,
+        num_heads=4,
+        attn_dropout=0.0,
+        mlp_dropout=0.0,
+        embedding_dropout=0.0,
+        num_classes=3,
+    )
+    x = torch.randn(1, 3, 64, 64)
+    out = model(x)
+    assert out.shape == (1, 3)
