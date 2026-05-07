@@ -50,3 +50,13 @@ def test_mlp_block_output_shape():
     x = torch.randn(BATCH, SEQ_LEN, EMBED_DIM)
     out = model(x)
     assert out.shape == x.shape
+
+
+def test_mlp_block_residual_connection():
+    model = MLPBlock(embedding_dim=768, mlp_size=3072, dropout=0.0)
+    with torch.no_grad():
+        for p in model.parameters():
+            p.zero_()
+    x = torch.zeros(1, SEQ_LEN, EMBED_DIM)
+    out = model(x)
+    assert torch.allclose(out, x)
