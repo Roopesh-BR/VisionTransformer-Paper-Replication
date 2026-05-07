@@ -29,6 +29,7 @@ def train_custom(args, device):
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
     train_dl, test_dl, class_names = create_dataloaders(
         train_dir=image_path / "train",
@@ -48,10 +49,9 @@ def train_custom(args, device):
         epochs=args.epochs,
         device=device,
     )
-    Path("models").mkdir(exist_ok=True)
     save_model(model, target_dir="models", model_name="custom_vit.pth")
     plot_loss_curves(results, save_path="models/custom_vit_loss_curves.png")
-    print(f"[INFO] Model saved to models/custom_vit.pth")
+    print("[INFO] Model saved to models/custom_vit.pth")
 
 
 def train_pretrained(args, device):
@@ -80,13 +80,13 @@ def train_pretrained(args, device):
         epochs=args.epochs,
         device=device,
     )
-    Path("models").mkdir(exist_ok=True)
     save_model(model, target_dir="models", model_name="pretrained_vit.pth")
     plot_loss_curves(results, save_path="models/pretrained_vit_loss_curves.png")
-    print(f"[INFO] Model saved to models/pretrained_vit.pth")
+    print("[INFO] Model saved to models/pretrained_vit.pth")
 
 
 def main():
+    torch.manual_seed(42)
     args = parse_args()
     device = torch.device(args.device)
     if args.model == "custom":

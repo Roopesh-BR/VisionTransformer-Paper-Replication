@@ -26,7 +26,7 @@ def load_model(
     return model
 
 
-def plot_loss_curves(results: dict, save_path: str = None):
+def plot_loss_curves(results: dict, save_path: str = None, show: bool = False):
     epochs = range(len(results["train_loss"]))
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 7))
     ax1.plot(epochs, results["train_loss"], label="train_loss")
@@ -42,7 +42,8 @@ def plot_loss_curves(results: dict, save_path: str = None):
     if save_path:
         plt.savefig(save_path)
         print(f"[INFO] Loss curves saved to {save_path}")
-    plt.show()
+    if show:
+        plt.show()
 
 
 def pred_and_plot_image(
