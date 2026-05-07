@@ -25,7 +25,7 @@ def test_patch_embedding_rejects_non_divisible_image():
         model(torch.randn(1, 3, 225, 225))
 
 
-from vit.model import MultiHeadSelfAttentionBlock, MLPBlock
+from vit.model import MultiHeadSelfAttentionBlock, MLPBlock, TransformerEncoderBlock
 
 
 def test_msa_block_output_shape():
@@ -60,3 +60,16 @@ def test_mlp_block_residual_connection():
     x = torch.zeros(1, SEQ_LEN, EMBED_DIM)
     out = model(x)
     assert torch.allclose(out, x)
+
+
+def test_transformer_encoder_block_output_shape():
+    model = TransformerEncoderBlock(
+        embedding_dim=768,
+        num_heads=12,
+        mlp_size=3072,
+        mlp_dropout=0.1,
+        attn_dropout=0.0,
+    )
+    x = torch.randn(BATCH, SEQ_LEN, EMBED_DIM)
+    out = model(x)
+    assert out.shape == x.shape
