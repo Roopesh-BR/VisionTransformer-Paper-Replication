@@ -25,3 +25,27 @@ class PatchEmbedding(nn.Module):
             f"Image size {x.shape[-1]} must be divisible by patch_size {self.patch_size}"
         )
         return self.flatten(self.patcher(x)).permute(0, 2, 1)
+
+
+class MultiHeadSelfAttentionBlock(nn.Module):
+    def __init__(
+        self,
+        embedding_dim: int = 768,
+        num_heads: int = 12,
+        attn_dropout: float = 0.0,
+    ):
+        super().__init__()
+        self.layer_norm = nn.LayerNorm(normalized_shape=embedding_dim)
+        self.multihead_attn = nn.MultiheadAttention(
+            embed_dim=embedding_dim,
+            num_heads=num_heads,
+            dropout=attn_dropout,
+            batch_first=True,
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x_norm = self.layer_norm(x)
+        attn_output, _ = self.multihead_attn(
+            query=x_norm, key=x_norm, value=x_norm, need_weights=False
+        )
+        return attn_output + x

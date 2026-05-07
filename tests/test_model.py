@@ -23,3 +23,23 @@ def test_patch_embedding_rejects_non_divisible_image():
     model = PatchEmbedding(in_channels=3, patch_size=16, embedding_dim=768)
     with pytest.raises(AssertionError):
         model(torch.randn(1, 3, 225, 225))
+
+
+from vit.model import MultiHeadSelfAttentionBlock
+
+
+def test_msa_block_output_shape():
+    model = MultiHeadSelfAttentionBlock(embedding_dim=768, num_heads=12)
+    x = torch.randn(BATCH, SEQ_LEN, EMBED_DIM)
+    out = model(x)
+    assert out.shape == x.shape, f"Expected {x.shape}, got {out.shape}"
+
+
+def test_msa_block_residual_connection():
+    model = MultiHeadSelfAttentionBlock(embedding_dim=768, num_heads=12)
+    with torch.no_grad():
+        for p in model.parameters():
+            p.zero_()
+    x = torch.zeros(1, SEQ_LEN, EMBED_DIM)
+    out = model(x)
+    assert torch.allclose(out, x)
