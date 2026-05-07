@@ -119,8 +119,12 @@ class ViT(nn.Module):
         )
         num_patches = (image_size // patch_size) ** 2
 
-        self.class_embedding = nn.Parameter(torch.randn(1, 1, embedding_dim))
-        self.position_embedding = nn.Parameter(torch.randn(1, num_patches + 1, embedding_dim))
+        self.class_embedding = nn.Parameter(
+            nn.init.trunc_normal_(torch.empty(1, 1, embedding_dim), std=0.02)
+        )
+        self.position_embedding = nn.Parameter(
+            nn.init.trunc_normal_(torch.empty(1, num_patches + 1, embedding_dim), std=0.02)
+        )
         self.embedding_dropout = nn.Dropout(p=embedding_dropout)
 
         self.patch_embedding = PatchEmbedding(
