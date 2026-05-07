@@ -20,7 +20,7 @@ def train_step(
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        y_pred_class = torch.argmax(torch.softmax(y_pred, dim=1), dim=1)
+        y_pred_class = torch.argmax(y_pred, dim=1)
         train_acc += (y_pred_class == y).sum().item() / len(y_pred)
     return train_loss / len(dataloader), train_acc / len(dataloader)
 
