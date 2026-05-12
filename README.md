@@ -12,8 +12,8 @@ Includes a from-scratch ViT implementation and pretrained ViT-B/16 fine-tuning, 
 
 | Model | Test Accuracy | Training Time |
 |---|---|---|
-| ViT from scratch (10 epochs) | ~72% | ~15 min (GPU) |
-| Pretrained ViT-B/16 (5 epochs) | ~95% | ~5 min (GPU) |
+| ViT from scratch (10 epochs) | 41.3% | ~15 min (GPU) |
+| Pretrained ViT-B/16 (5 epochs) | 92.0% | ~5 min (GPU) |
 
 *Results after training on FoodVision Mini. Times measured on a single GPU.*
 
