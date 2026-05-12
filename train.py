@@ -11,7 +11,7 @@ from vit.engine import train
 from vit.model import ViT
 from vit.utils import save_model, plot_loss_curves
 
-DATA_URL = "https://github.com/mrdbourke/pytorch-deep-learning/releases/download/misc/pizza_steak_sushi.zip"
+DATA_URL = "https://github.com/mrdbourke/pytorch-deep-learning/raw/main/data/pizza_steak_sushi.zip"
 
 
 def parse_args():
