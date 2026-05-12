@@ -38,7 +38,7 @@ def train_custom(args, device):
         batch_size=args.batch_size,
     )
     model = ViT(num_classes=len(class_names)).to(device)
-    optimizer = torch.optim.Adam(params=model.parameters(), lr=args.lr, weight_decay=0.1)
+    optimizer = torch.optim.Adam(params=model.parameters(), lr=args.lr, betas=(0.9, 0.999), weight_decay=0.3)
     loss_fn = nn.CrossEntropyLoss()
     results = train(
         model=model,
