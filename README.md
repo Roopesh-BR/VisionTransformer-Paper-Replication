@@ -43,8 +43,8 @@ Input image [B, 3, 224, 224]
 
 ```bash
 # Install
-git clone https://github.com/<your-username>/vit-paper-replication.git
-cd vit-paper-replication
+git clone https://github.com/Roopesh-BR/VisionTransformer-Paper-Replication.git
+cd VisionTransformer-Paper-Replication
 pip install -r requirements.txt
 pip install -e .
 
